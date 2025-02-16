@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(cors());
 
-//routes
+// Routes
 app.get("/", (req, res) => {
   res.send("hello from server");
 });
@@ -32,15 +32,29 @@ app.post("/api/sendemail", async (req, res) => {
       <p>Best regards</p>`;
 
     await sendEmail(subject, message, send_to, sent_from, reply_to);
+    console.log("Email sent successfully");
 
     // Send user details to Slack
     const slackMessage = {
       text: `New registration:\n*Name:* ${name}\n*Email:* ${email}`,
     };
-    await axios.post(process.env.SLACK_WEBHOOK_URL, slackMessage);
 
-    res.status(200).json({ success: true, message: "Email sent and Slack notification sent successfully" });
+    try {
+      console.log("Sending Slack notification:", slackMessage); // Log Slack message payload
+      const slackResponse = await axios.post(process.env.SLACK_WEBHOOK_URL, slackMessage);
+      console.log("Slack notification sent successfully:", slackResponse.data);
+      res.status(200).json({ success: true, message: "Email sent and Slack notification sent successfully" });
+    } catch (slackError) {
+      if (slackError.response) {
+        // Log the response data from Slack for debugging
+        console.error("Slack API response error:", slackError.response.data);
+      } else {
+        console.error("Error sending Slack notification:", slackError.message);
+      }
+      res.status(500).json({ message: "Error sending Slack notification", error: slackError.message });
+    }
   } catch (error) {
+    console.error("Error in /api/sendemail route:", error); // Log the specific error for debugging
     res.status(500).json({ message: error.message });
   }
 });
