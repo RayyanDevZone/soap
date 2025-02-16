@@ -13,7 +13,7 @@ const RegistrationPage = () => {
       console.log(name, email); // Debugging: Check if name and email are set correctly
       try {
         const data = { name, email };
-        const response = await axios.post('http://localhost:5000/api/sendemail', data);
+        const response = await axios.post('https://backend-bice-one-80.vercel.app/api/sendemail', data);
         console.log(response.data);
         navigate('/confirmation');
       } catch (error) {
