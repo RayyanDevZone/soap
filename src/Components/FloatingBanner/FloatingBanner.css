@@ -1,0 +1,22 @@
+@keyframes blinking {
+    0% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  
+  .blinking {
+    animation: blinking 1s infinite;
+  }
+  
+  @keyframes vibrating {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-3px); }
+    50% { transform: translateX(3px); }
+    75% { transform: translateX(-3px); }
+    100% { transform: translateX(0); }
+  }
+  
+  .looping-button {
+    animation: vibrating 1s 2s infinite; /* Animation duration is 0.5 seconds, delays by 1 second, repeats infinitely */
+  }
+  
